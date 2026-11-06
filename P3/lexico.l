@@ -53,8 +53,8 @@ LETRA_NUM   [a-zA-Z0-9_]
 
     /* CONSTANTES COMPLEJAS Y CADENAS */
 {DIGITO}+           { yylval.entero = atoi(yytext); return CTE_ENTERA; }
-{DIGITO}+\.{DIGITO}+ { yylval.real = atof(yytext); return CTE_REAL_CARACTER; }
-'[^']'              { yylval.caracter = yytext[1]; return CTE_REAL_CARACTER; }
+{DIGITO}+\.{DIGITO}+ { yylval.real = atof(yytext); return CTE_REAL; }
+'[^']'              { yylval.caracter = yytext[1]; return CTE_CARACTER; }
 \"[^\"]*\"          { yylval.cadena = strdup(yytext); return CTE_CADENA; }
 
     /* OPERADORES MULTIPLICATIVOS Y MATRICIALES (** antes que *) */
