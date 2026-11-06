@@ -1,0 +1,166 @@
+// *****************************************************************************
+// ***
+// *** Fichero : prueba.babad
+// *** Funcion : Programa de prueba para el analizador sintáctico (Apéndice E)
+// ***           adaptado a la gramática BABAD
+// ***
+// *****************************************************************************
+
+entero principal ()
+{
+    inicio_variables
+        /* Variables simples de cada tipo básico */
+        entero ve, ve2;
+        real vf, vf2;
+        caracter vc, vc2;
+        booleano vb, vb2;
+
+        /* Cuatro variables del tipo estructurado (arrays 1D y 2D) de cada tipo básico */
+        entero arr_e1[10], arr_e2[10], mat_e1[3][3], mat_e2[3][3];
+        real arr_r1[10], arr_r2[10], mat_r1[3][3], mat_r2[3][3];
+        caracter arr_c1[10], arr_c2[10], mat_c1[3][3], mat_c2[3][3];
+        booleano arr_b1[10], arr_b2[10], mat_b1[3][3], mat_b2[3][3];
+    fin_variables
+
+    /* ========================================================================= */
+    /* Subprogramas anidados a tres niveles y en paralelo: { A { B { C } } D { E } } */
+    /* ========================================================================= */
+
+    entero funcionA ( entero a1, real a2, caracter a3 )
+    {
+        inicio_variables
+            entero x1, x2;
+        fin_variables
+
+        caracter funcionB ( caracter b1, booleano b2 )
+        {
+            inicio_variables
+                real xf, x2;
+            fin_variables
+
+            real funcionC ( booleano c1, entero c2 )
+            {
+                inicio_variables
+                    real x1;
+                fin_variables
+
+                x1 = 1.3;
+                si (c2 > 10)
+                    c2 = c2 - 1;
+                sino
+                    x1 = 3.1;
+
+                /* Estructura iterativa hacer ... hasta */
+                hacer
+                {
+                    x1 = x1 + 0.5;
+                } hasta ( x1 > 5.0 );
+
+                devolver x1;
+            }
+
+            xf = funcionC ( verdadero, 10 );
+            x2 = xf * ( funcionC ( falso, 1 ) - funcionC ( verdadero, 23 ) ) / 10.0;
+            mientras ( x2 * funcionC ( falso, 1 ) - xf < 10.0 )
+            {
+                x2 = x2 * xf;
+            }
+
+            devolver b1;
+        }
+
+        x1 = a1 + 5;
+        devolver x1;
+    }
+
+    real funcionD ( real d1 )
+    {
+        inicio_variables
+            caracter dato;
+            entero valor;
+        fin_variables
+
+        caracter funcionE ( caracter e1, caracter e2 )
+        {
+            inicio_variables
+                caracter res;
+            fin_variables
+
+            leer e1, e2;
+            si ( e1 == 'a' )
+                res = e1;
+            sino
+            {
+                si ( e1 == 'b' )
+                    res = e2;
+                sino
+                    res = ' ';
+            }
+            devolver res;
+        }
+
+        leer valor;
+        si ( d1 > 0.0 )
+        {
+            inicio_variables
+                entero dato_local;
+            fin_variables
+            dato_local = 2;
+            dato_local = valor * 20 / dato_local;
+        }
+        sino
+        {
+            valor = valor * 100;
+            d1 = d1 / 1000.0;
+        }
+
+        /* Estructura hacer ... hasta en la función D */
+        hacer
+        {
+            d1 = d1 - 1.0;
+        } hasta ( d1 <= 0.0 );
+
+        devolver d1;
+    }
+
+    /* ========================================================================= */
+    /* Sentencias en el cuerpo principal */
+    /* ========================================================================= */
+
+    /* 1. Asignación de constantes de arrays (agregados 1D y 2D) */
+    arr_e1 = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+    mat_e1 = { 1, 2, 3 ; 4, 5, 6 ; 7, 8, 9 };
+    mat_e2 = { 9, 8, 7 ; 6, 5, 4 ; 3, 2, 1 };
+
+    /* 2. Operaciones con tipo estructurado: elemento a elemento y matricial (**) */
+    arr_e2[0] = arr_e1[0] + 5;
+    mat_e1 = mat_e1 ** mat_e2;
+    mat_e2 = mat_e1 + mat_e2;
+
+    /* 3. Llamadas a subprogramas anidados */
+    ve = funcionA ( 10, 3.14, 'x' );
+    vf = funcionD ( 5.5 );
+
+    /* 4. Sentencias de entrada y salida */
+    escribir "Resultado entero: ", ve;
+    escribir "Resultado real: ", vf;
+
+    /* 5. Expresiones aritmético-lógicas complejas */
+    si ( (ve > 0) && (vf <= 10.0) || !(vb == verdadero) )
+    {
+        ve = ve + 1;
+    }
+    sino
+    {
+        ve = ve - 1;
+    }
+
+    /* 6. Estructura de control iterativa adicional: hacer ... hasta */
+    hacer
+    {
+        ve = ve - 1;
+        arr_e1[0] = arr_e1[0] + 1;
+    } hasta ( ve == 0 );
+
+    devolver 0;
+}
