@@ -1,20 +1,35 @@
 # *****************************************************************************
 # ***
 # *** Fichero : Makefile
-# *** Funcion : Compilar el analizador sintáctico (Bison + Flex + main.c)
+# *** Funcion : Compilar el analizador semántico (Bison + Flex + TS + GestSem + main.c)
 # ***
 # *****************************************************************************
 
-analizador: sintactico.tab.c lex.yy.c main.c
-	gcc -o analizador sintactico.tab.c lex.yy.c main.c
+CC = gcc
+CFLAGS = -Wall -g
 
-sintactico.tab.c sintactico.tab.h: sintactico.y
-	bison -d -v sintactico.y
+analizador: semantico.tab.o TS.o GestSem.o main.o
+	$(CC) $(CFLAGS) -o analizador semantico.tab.o TS.o GestSem.o main.o
 
-lex.yy.c: lexico.l sintactico.tab.h
+semantico.tab.o: semantico.tab.c lex.yy.c GestSem.h TS.h
+	$(CC) $(CFLAGS) -c semantico.tab.c
+
+TS.o: TS.c TS.h
+	$(CC) $(CFLAGS) -c TS.c
+
+GestSem.o: GestSem.c GestSem.h TS.h
+	$(CC) $(CFLAGS) -c GestSem.c
+
+main.o: main.c
+	$(CC) $(CFLAGS) -c main.c
+
+semantico.tab.c semantico.tab.h: semantico.y
+	bison -d -v semantico.y
+
+lex.yy.c: lexico.l semantico.tab.h
 	flex lexico.l
 
 comp: analizador
 
 clean:
-	rm -f analizador lex.yy.c sintactico.tab.c sintactico.tab.h sintactico.output
+	rm -f analizador *.o lex.yy.c semantico.tab.c semantico.tab.h semantico.output
